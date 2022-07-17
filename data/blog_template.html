@@ -1,0 +1,23 @@
+{{define "Blog"}}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="data/styles.css">
+    <script src="https://kit.fontawesome.com/fd9d265553.js" crossorigin="anonymous"></script>
+</head>
+
+{{.Header}}
+
+<body>
+    
+    <h1 class="title">{{.Title}}</h1>
+    <hr class="sep">
+    <br>
+    
+    <div class="container">
+        {{.Content}}
+    </div>
+
+</body>
+
+{{.Footer}}
+{{end}}
