@@ -13,7 +13,7 @@
 .card {
     border: 1px solid rgba(250, 231, 231);
     margin:5vh auto; 
-    padding: 5.0vh;
+    padding: 0 5.0vh 5.0vh 5.0vh;
     background-color: #66707e;
     color: #eeeeee;
     
@@ -23,12 +23,18 @@
     font-family: charter, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
+.heading {
+    color: #eeeeee;
+    font-size: 3.0vmin;
+}
+
 a {
     text-decoration: none;
 }
 
 .card:hover {
     box-shadow: 0 4px 8px 0 rgba(250, 231, 231, 0.2), 0 6px 20px 0 rgba(250, 231, 231, 0.2);
+    background-color: #884b4b;
 }
 
 /* Responsive */

@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-
+	"lifesgood/service/util"
 	"github.com/gomarkdown/markdown"
 )
 
@@ -18,8 +18,8 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		"Content": template.HTML(string(html)),
 	}
 
-	addHeader(blogVars)
-	addFooter(blogVars)
+	util.AddHeader(blogVars)
+	util.AddFooter(blogVars)
 
 	t, _ := template.ParseFiles("../data/templates/blog_template.html")
 
@@ -29,36 +29,23 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 func HomePageHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	blogVars := map[string]interface{}{
-		"Title": "My First Blog",
-	}
+	homeVars := map[string]interface{}{}
 
-	addHeader(blogVars)
-	addFooter(blogVars)
-	addCards(blogVars)
+	util.AddHeader(homeVars)
+	util.AddFooter(homeVars)
+	addCards(homeVars)
 
 	t, _ := template.ParseFiles("../data/templates/home_template.html")
-
-	// w.Write(html)
-	t.ExecuteTemplate(w, "Home", blogVars)
+	
+	t.ExecuteTemplate(w, "Home", homeVars)
 }
 
 func addCards(vars map[string]interface{}) {
 	var buf bytes.Buffer
 	for i := 0; i < 5; i++ {
 		card, _ := template.ParseFiles("../data/templates/card_template.html")
-		card.ExecuteTemplate(&buf, "Card",nil)
+		card.ExecuteTemplate(&buf, "Card", nil)
 	}
 
 	vars["Content"] = template.HTML(buf.String())
-}
-
-func addHeader(vars map[string]interface{}) {
-	navbar, _ := os.ReadFile("../data/templates/navbar.html")
-	vars["Navbar"] = template.HTML(string(navbar))
-}
-
-func addFooter(vars map[string]interface{}) {
-	footer, _ := os.ReadFile("../data/templates/footer.html")
-	vars["Footer"] = template.HTML(string(footer))
 }
