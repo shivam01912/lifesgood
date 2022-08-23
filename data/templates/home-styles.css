@@ -1,13 +1,14 @@
 .cards    {
     display: flex;
-    width: 90vmin;    
+    width: 100vmin;    
     margin:0 auto; 
 }
 
-.colum {
+.column {
     flex-direction: column;
     margin-right: 10px;
     flex: 1;
+    width: 100%;
   }
   
 .card {
@@ -41,5 +42,6 @@ a {
 @media screen and (max-width: 800px) {
     .cards {
         font-size: 2.5vmax;
+        width: 90vmin;
     }
 }

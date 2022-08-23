@@ -9,7 +9,7 @@ import (
 
 func main() {
 	http.HandleFunc("/", requestHandlers.HomePageHandler)
-	http.HandleFunc("/sample", requestHandlers.BlogHandler)
+	http.HandleFunc("/blog", requestHandlers.BlogHandler)
 	http.HandleFunc("/admin", admin.AddBlogHandler)
 	http.HandleFunc("/admin/addblog", admin.ProcessAddBlog)
 
