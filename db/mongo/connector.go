@@ -38,16 +38,13 @@ func Connect() (*mongo.Client, context.Context, context.CancelFunc) {
 	return client, ctx, cancel
 }
 
-func InsertOne(client *mongo.Client, ctx context.Context, dataBase, col string, doc model.Blog) *mongo.InsertOneResult {
+func InsertOne(client *mongo.Client, ctx context.Context, dataBase, col string, doc model.Blog) (*mongo.InsertOneResult, error) {
 
 	collection := client.Database(dataBase).Collection(col)
 
 	result, err := collection.InsertOne(ctx, doc)
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	return result
+	return result, err
 }
  
 func FindAll(client *mongo.Client, ctx context.Context, dataBase, col string, query, field interface{}) *mongo.Cursor {

@@ -12,18 +12,43 @@ import (
 	"lifesgood/model"
 )
 
-func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
-	vars := map[string]interface{}{}
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	vars := getBasePageVars()
 
-	util.AddHeader(vars)
-	util.AddFooter(vars)
+	t, _ := template.ParseFiles("../data/templates/admin_login_template.html")
+	
+	t.ExecuteTemplate(w, "Login", vars)
+
+	// http.Redirect(w, r, "http://localhost:8080/admin/", 301)
+}
+
+func ProcessLogin(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if r.PostForm.Get("username") != "admin" || r.PostForm.Get("password") != "admin" {
+		w.Write([]byte("You are not an Admin"))
+		return
+	}
+
+	vars := getBasePageVars()
+
+	t, _ := template.ParseFiles("../data/templates/admin_page_template.html")
+
+	t.ExecuteTemplate(w, "Admin", vars)
+}
+
+func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
+	vars := getBasePageVars()
 
 	t, _ := template.ParseFiles("../data/templates/add_blog_template.html")
 
 	t.ExecuteTemplate(w, "AddBlog", vars)
 }
 
-func ProcessAddBlog(w http.ResponseWriter, r *http.Request) {
+func ProcessPublishBlog(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseMultipartForm(10 << 10)
 	if err != nil {
 		log.Fatal(err)
@@ -57,11 +82,22 @@ func ProcessAddBlog(w http.ResponseWriter, r *http.Request) {
 	client, ctx, cancel := mongo.Connect()
     defer mongo.Close(client, ctx, cancel)
 
-	insertOneResult := mongo.InsertOne(client, ctx, "lifesgood", "blogs", post)
+	insertOneResult, err := mongo.InsertOne(client, ctx, "lifesgood", "blogs", post)
  
+	if err != nil {
+		w.Write([]byte("Unable to Publish blog"))
+		w.Write([]byte(err.Error()))
+		return
+	}
+
 	log.Println(insertOneResult)
 
-	// fmt.Println(post)
-	// fmt.Println(time.Unix(time.Now().Unix(), 0))
-	
+	w.Write([]byte("Blog Added Successfully"))
+}
+
+func getBasePageVars() map[string]interface{} {
+	result := map[string]interface{}{}
+	util.AddHeader(result)
+	util.AddFooter(result)
+	return result
 }

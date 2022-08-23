@@ -1,9 +1,8 @@
 {{define "AddBlog"}}
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="data/templates/base-styles.css">
-    <link rel="stylesheet" href="data/templates/admin-styles.css">
-    <script src="https://kit.fontawesome.com/fd9d265553.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/data/templates/base-styles.css">
+    <link rel="stylesheet" href="/data/templates/admin-styles.css">
 </head>
 
 {{.Navbar}}
@@ -15,7 +14,7 @@
             <input type="text" id="blog_brief" name="brief" placeholder="Blog Brief"><br><br>
             <input type="text" id="blog_tags" name="tags" placeholder="Tags"><br><br>
             <input type="file" id="blog_content" name="content"><br><br>
-            <input type="submit" value="Submit">
+            <input type="submit" value="Publish">
         </form>
     </div>    
 </body>

@@ -1,0 +1,21 @@
+{{define "Admin"}}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/data/templates/base-styles.css">
+    <link rel="stylesheet" href="/data/templates/admin-styles.css">
+</head>
+
+{{.Navbar}}
+
+<body>
+    <div class="container">
+        <a href="/admin/addblog">
+            <div class="options">
+                <p class="heading">Publish New Blog</p>
+            </div>
+        </a>
+    </div>    
+</body>
+
+{{.Footer}}
+{{end}}
