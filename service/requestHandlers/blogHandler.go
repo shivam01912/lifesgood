@@ -34,10 +34,12 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	date := time.Unix(blog.CreatedAt, 0).Format("2 Jan, 2006")
 
 	blogVars := map[string]interface{}{
+		"Link": "/blog?id="+blog["_id"].(primitive.ObjectID).Hex(),
 		"Title": blog.Title,
 		"Content": template.HTML(string(html)),
 		"Tags": blog.Tags,
 		"Date": date,
+		"Likes": blog.Likes,
 	}
 
 	util.AddHeader(blogVars)

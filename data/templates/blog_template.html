@@ -4,6 +4,18 @@
     <link rel="stylesheet" href="/data/templates/base-styles.css">
     <link rel="stylesheet" href="/data/templates/blog-styles.css">
     <script src="https://kit.fontawesome.com/fd9d265553.js" crossorigin="anonymous"></script>
+    <script>
+        function toggleLikeIcon(icon) {
+            icon.classList.remove("fa-regular");
+            icon.classList.add("fa-solid");
+
+            var count = +document.getElementById("likeCount").value;
+            console.log(count);
+            count += 1;
+            document.getElementById("likeCount").innerHTML = count;
+
+        }
+    </script>
 </head>
 
 {{.Navbar}}
@@ -19,17 +31,24 @@
     </div>
 
     <hr class="sep">
-    
+
     <div class="container">
-        <div class="blog-footer">
-            <div style="width: 600px; float: left;"> 
+       <div class="blog-footer">
+        <div style="display: table-row">
+            <div style="width: 40%; display: table-cell; text-align: left;">
                 <i class="fa-solid fa-tags"></i> 
                 {{range .Tags}}
                     {{.}} | 
                 {{end}}
             </div>
-            <div style="text-align: right;"> {{.Date}} </div>
-       </div>
+
+            <div style="width: 20%; display: table-cell; text-align: center;">
+                <i onclick="toggleLikeIcon(this)" class="fa-regular fa-thumbs-up" id="likeCount"> {{.Likes}}</i>
+            </div>
+            
+            <div style="width: 40%; display: table-cell; text-align: right;"> {{.Date}} </div>
+        </div>
+    </div>
     </div>
     
 </body>

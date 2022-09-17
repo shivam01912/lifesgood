@@ -30,7 +30,7 @@ func addCards(vars map[string]interface{}) {
 	var buf bytes.Buffer
 	var filter, option interface{}
 	filter = bson.D{}
-	option = bson.D{{"_id", 1}, {"title", 1}, {"brief", 1}, {"tags", 1}, {"createdat", 1}}
+	option = bson.D{{"_id", 1}, {"title", 1}, {"brief", 1}, {"tags", 1}, {"likes", 1}, {"createdat", 1}}
 	
 	client, ctx, cancel := mongo.Connect()
 	defer mongo.Close(client, ctx, cancel)
@@ -51,6 +51,7 @@ func addCards(vars map[string]interface{}) {
 			"Brief": blog["brief"],
 			"Tags": blog["tags"],
 			"Date": date,
+			"Likes": blog["likes"],
 			"Link": "/blog?id="+blog["_id"].(primitive.ObjectID).Hex(),
 		}
 

@@ -14,7 +14,7 @@ img {display: block; width: 80%; margin-left: auto; margin-right: auto;}
 .blog-footer {
     margin-top: 2vmin;
     width: 100%; 
-    overflow: hidden;
+    display: table;
     color: #d3b3b3
 }
 

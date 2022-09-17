@@ -4,15 +4,25 @@
         <p class="heading">{{.Title}}</p>
         <p class="brief">{{.Brief}}</p>
         <hr>
+
+
         <div class="card-footer">
-            <div style="width: 600px; float: left;"> 
-                <i class="fa-solid fa-tags"></i> 
-                {{range .Tags}}
-                    {{.}} | 
-                {{end}}
+            <div style="display: table-row">
+                <div style="width: 40%; display: table-cell; text-align: left;">
+                    <i class="fa-solid fa-tags"></i> 
+                    {{range .Tags}}
+                        {{.}} | 
+                    {{end}}
+                </div>
+
+                <div style="width: 20%; display: table-cell; text-align: center;">
+                    <i class="fa-solid fa-thumbs-up"></i>
+                    {{.Likes}}
+                </div>
+
+                <div style="width: 40%; display: table-cell; text-align: right;"> {{.Date}} </div>
             </div>
-            <div style="text-align: right;"> {{.Date}} </div>
-       </div>
+        </div>
     </div>
 </a>
 {{end}}

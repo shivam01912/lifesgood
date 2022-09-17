@@ -26,7 +26,7 @@
 
 .card-footer {
     width: 100%; 
-    overflow: hidden;
+    display: table;
     color: #d3b3b3
 }
 
