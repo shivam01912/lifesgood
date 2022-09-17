@@ -18,8 +18,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("../data/templates/admin_login_template.html")
 	
 	t.ExecuteTemplate(w, "Login", vars)
-
-	// http.Redirect(w, r, "http://localhost:8080/admin/", 301)
 }
 
 func ProcessLogin(w http.ResponseWriter, r *http.Request) {

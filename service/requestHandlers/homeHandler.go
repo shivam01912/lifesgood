@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"log"
+	"time"
 	"lifesgood/service/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -29,7 +30,7 @@ func addCards(vars map[string]interface{}) {
 	var buf bytes.Buffer
 	var filter, option interface{}
 	filter = bson.D{}
-	option = bson.D{{"_id", 1}, {"title", 1}, {"brief", 1}}
+	option = bson.D{{"_id", 1}, {"title", 1}, {"brief", 1}, {"tags", 1}, {"createdat", 1}}
 	
 	client, ctx, cancel := mongo.Connect()
 	defer mongo.Close(client, ctx, cancel)
@@ -43,9 +44,13 @@ func addCards(vars map[string]interface{}) {
 	}
 	
 	for _, blog := range results {
+		d, _ := blog["createdat"].(int64)
+		date := time.Unix(d, 0).Format("2 Jan, 2006")
 		cardVars := map[string]interface{}{
 			"Title": blog["title"],
 			"Brief": blog["brief"],
+			"Tags": blog["tags"],
+			"Date": date,
 			"Link": "/blog?id="+blog["_id"].(primitive.ObjectID).Hex(),
 		}
 

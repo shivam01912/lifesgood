@@ -14,7 +14,7 @@
 .card {
     border: 1px solid rgba(250, 231, 231);
     margin:5vh auto; 
-    padding: 0 5.0vh 5.0vh 5.0vh;
+    padding: 0 5.0vh 2.0vh 5.0vh;
     background-color: #66707e;
     color: #eeeeee;
     
@@ -24,9 +24,19 @@
     font-family: charter, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
+.card-footer {
+    width: 100%; 
+    overflow: hidden;
+    color: #d3b3b3
+}
+
 .heading {
     color: #eeeeee;
     font-size: 3.0vmin;
+}
+
+.brief {
+    margin-bottom: 2.0vmin;
 }
 
 a {

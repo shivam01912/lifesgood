@@ -2,7 +2,17 @@
 <a href={{.Link}}>
     <div class="card">
         <p class="heading">{{.Title}}</p>
-        {{.Brief}}
+        <p class="brief">{{.Brief}}</p>
+        <hr>
+        <div class="card-footer">
+            <div style="width: 600px; float: left;"> 
+                <i class="fa-solid fa-tags"></i> 
+                {{range .Tags}}
+                    {{.}} | 
+                {{end}}
+            </div>
+            <div style="text-align: right;"> {{.Date}} </div>
+       </div>
     </div>
 </a>
 {{end}}

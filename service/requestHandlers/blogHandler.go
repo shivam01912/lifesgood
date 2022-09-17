@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 	"log"
+	"time"
 	"lifesgood/service/util"
 	"github.com/gomarkdown/markdown"
 	"go.mongodb.org/mongo-driver/bson"
@@ -28,11 +29,15 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 
 	blog := fetchById(objectId)
 	
-	html := markdown.ToHTML(blog.Content, nil, nil)
+	html := markdown.ToHTML(blog.Content, nil, nil) 
+
+	date := time.Unix(blog.CreatedAt, 0).Format("2 Jan, 2006")
 
 	blogVars := map[string]interface{}{
 		"Title": blog.Title,
 		"Content": template.HTML(string(html)),
+		"Tags": blog.Tags,
+		"Date": date,
 	}
 
 	util.AddHeader(blogVars)

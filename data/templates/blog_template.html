@@ -3,6 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/data/templates/base-styles.css">
     <link rel="stylesheet" href="/data/templates/blog-styles.css">
+    <script src="https://kit.fontawesome.com/fd9d265553.js" crossorigin="anonymous"></script>
 </head>
 
 {{.Navbar}}
@@ -17,6 +18,20 @@
         {{.Content}}
     </div>
 
+    <hr class="sep">
+    
+    <div class="container">
+        <div class="blog-footer">
+            <div style="width: 600px; float: left;"> 
+                <i class="fa-solid fa-tags"></i> 
+                {{range .Tags}}
+                    {{.}} | 
+                {{end}}
+            </div>
+            <div style="text-align: right;"> {{.Date}} </div>
+       </div>
+    </div>
+    
 </body>
 
 {{.Footer}}
