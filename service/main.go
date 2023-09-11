@@ -1,13 +1,16 @@
 package main
 
 import (
-	"lifesgood/service/requestHandlers"
 	"lifesgood/service/admin"
+	"lifesgood/service/requestHandlers"
 	"log"
 	"net/http"
 )
 
 func main() {
+	fs := http.FileServer(http.Dir("data/templates"))
+	http.Handle("/css/", fs)
+
 	http.HandleFunc("/", requestHandlers.HomePageHandler)
 	http.HandleFunc("/blog", requestHandlers.BlogHandler)
 
