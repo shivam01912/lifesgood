@@ -11,7 +11,7 @@ RUN go mod download
 COPY . .
 
 # Build
-RUN go mod -o /docker-lifes-good
+RUN go build -o /docker-lifes-good
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
