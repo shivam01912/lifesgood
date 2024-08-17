@@ -21,7 +21,7 @@ func HomePageHandler(w http.ResponseWriter, r *http.Request) {
 	util.AddFooter(homeVars)
 	addCards(homeVars)
 
-	t, err := template.ParseFiles("../data/templates/home_template.gohtml")
+	t, err := template.ParseFiles("./data/templates/home_template.gohtml")
 
 	if err != nil {
 		log.Println("Error parsing template : ", err)
@@ -59,7 +59,7 @@ func addCards(vars map[string]interface{}) {
 			"Link":  "/blog?id=" + blog["_id"].(primitive.ObjectID).Hex(),
 		}
 
-		card, err := template.ParseFiles("../data/templates/card_template.gohtml")
+		card, err := template.ParseFiles("./data/templates/card_template.gohtml")
 
 		if err != nil {
 			log.Println(err)

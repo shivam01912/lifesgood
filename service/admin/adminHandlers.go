@@ -17,7 +17,7 @@ import (
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	vars := getBasePageVars()
 
-	t, _ := template.ParseFiles("../data/templates/admin_login_template.gohtml")
+	t, _ := template.ParseFiles("./data/templates/admin_login_template.gohtml")
 
 	t.ExecuteTemplate(w, "Login", vars)
 }
@@ -71,7 +71,7 @@ func ProcessLogin(w http.ResponseWriter, r *http.Request) {
 
 	vars := getBasePageVars()
 
-	t, _ := template.ParseFiles("../data/templates/admin_page_template.gohtml")
+	t, _ := template.ParseFiles("./data/templates/admin_page_template.gohtml")
 
 	t.ExecuteTemplate(w, "Admin", vars)
 }
@@ -79,7 +79,7 @@ func ProcessLogin(w http.ResponseWriter, r *http.Request) {
 func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
 	vars := getBasePageVars()
 
-	t, _ := template.ParseFiles("../data/templates/add_blog_template.gohtml")
+	t, _ := template.ParseFiles("./data/templates/add_blog_template.gohtml")
 
 	t.ExecuteTemplate(w, "AddBlog", vars)
 }

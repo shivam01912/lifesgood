@@ -45,7 +45,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	util.AddHeader(blogVars)
 	util.AddFooter(blogVars)
 
-	t, _ := template.ParseFiles("../data/templates/blog_template.gohtml")
+	t, _ := template.ParseFiles("./data/templates/blog_template.gohtml")
 
 	t.ExecuteTemplate(w, "Blog", blogVars)
 }
