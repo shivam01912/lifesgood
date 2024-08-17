@@ -19,4 +19,4 @@ steps:
 images:
   - 'gcr.io/$PROJECT_ID/lifes-good-blog:$COMMIT_SHA'
 options:
-  logging: REGIONAL_USER_OWNED_BUCKET
+  logging: DEFAULT_LOGS_BUCKET_BEHAVIOR
