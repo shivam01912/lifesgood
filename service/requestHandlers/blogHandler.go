@@ -34,7 +34,6 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	date := time.Unix(blog.CreatedAt, 0).Format("2 Jan, 2006")
 
 	blogVars := map[string]interface{}{
-		//"Link": "/blog?id="+blog["_id"].(primitive.ObjectID).Hex(),
 		"Link":    "/blog?id=" + blog.Title,
 		"Title":   blog.Title,
 		"Content": template.HTML(string(html)),
@@ -46,7 +45,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	util.AddHeader(blogVars)
 	util.AddFooter(blogVars)
 
-	t, _ := template.ParseFiles("data/templates/blog_template.gohtml")
+	t, _ := template.ParseFiles("../data/templates/blog_template.gohtml")
 
 	t.ExecuteTemplate(w, "Blog", blogVars)
 }

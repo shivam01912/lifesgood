@@ -8,10 +8,10 @@ import (
 )
 
 func main() {
-	fs := http.FileServer(http.Dir("data/templates"))
+	fs := http.FileServer(http.Dir("../data/templates"))
 	http.Handle("/css/", fs)
 
-	http.HandleFunc("/", requestHandlers.HomePageHandler)
+	http.HandleFunc("/home", requestHandlers.HomePageHandler)
 	http.HandleFunc("/blog", requestHandlers.BlogHandler)
 
 	http.HandleFunc("/admin/login", admin.LoginHandler)

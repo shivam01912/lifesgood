@@ -25,7 +25,7 @@ func Connect() (*mongo.Client, context.Context, context.CancelFunc) {
 
 	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
 	clientOptions := options.Client().
-		ApplyURI("mongodb+srv://lifesgood:lifesgood@lifesgood.j9e1mix.mongodb.net/?retryWrites=true&w=majority").
+		ApplyURI("mongodb+srv://lifesgood:lifesgood@lifesgood.j9e1mix.mongodb.net/?retryWrites=true&w=majority&appName=lifesgood").
 		SetServerAPIOptions(serverAPIOptions)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

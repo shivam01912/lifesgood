@@ -1,6 +1,8 @@
 package admin
 
 import (
+	"go.mongodb.org/mongo-driver/bson"
+	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"io/ioutil"
 	"lifesgood/db/mongo"
@@ -15,9 +17,39 @@ import (
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	vars := getBasePageVars()
 
-	t, _ := template.ParseFiles("data/templates/admin_login_template.gohtml")
+	t, _ := template.ParseFiles("../data/templates/admin_login_template.gohtml")
 
 	t.ExecuteTemplate(w, "Login", vars)
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+
+func fetchAdminCredentials(username string) model.Credentials {
+	var filter, option interface{}
+	filter = bson.D{{"username", username}}
+	option = bson.D{{"_id", 0}}
+
+	client, ctx, cancel := mongo.Connect()
+	defer mongo.Close(client, ctx, cancel)
+
+	result := mongo.FindOne(client, ctx, "lifesgood", "credentials", filter, option)
+
+	data, err := bson.Marshal(result)
+	if err != nil {
+		log.Println("Unable to marshal Credentials")
+	}
+
+	var credentials model.Credentials
+	err = bson.Unmarshal(data, &credentials)
+	if err != nil {
+		log.Println("Unable to Unmarshal Credentials")
+		log.Println(err)
+	}
+
+	return credentials
 }
 
 func ProcessLogin(w http.ResponseWriter, r *http.Request) {
@@ -26,14 +58,20 @@ func ProcessLogin(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	if r.PostForm.Get("username") != "admin" || r.PostForm.Get("password") != "admin" {
+	credentials := fetchAdminCredentials(r.PostForm.Get("username"))
+
+	userPass := r.PostForm.Get("password")
+
+	match := CheckPasswordHash(userPass, credentials.Password)
+
+	if !match {
 		w.Write([]byte("You are not an Admin"))
 		return
 	}
 
 	vars := getBasePageVars()
 
-	t, _ := template.ParseFiles("data/templates/admin_page_template.gohtml")
+	t, _ := template.ParseFiles("../data/templates/admin_page_template.gohtml")
 
 	t.ExecuteTemplate(w, "Admin", vars)
 }
@@ -41,7 +79,7 @@ func ProcessLogin(w http.ResponseWriter, r *http.Request) {
 func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
 	vars := getBasePageVars()
 
-	t, _ := template.ParseFiles("data/templates/add_blog_template.gohtml")
+	t, _ := template.ParseFiles("../data/templates/add_blog_template.gohtml")
 
 	t.ExecuteTemplate(w, "AddBlog", vars)
 }
