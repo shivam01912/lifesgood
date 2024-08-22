@@ -47,7 +47,11 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 
 	t, _ := template.ParseFiles("./data/templates/blog_template.gohtml")
 
-	t.ExecuteTemplate(w, "Blog", blogVars)
+	err = t.ExecuteTemplate(w, "Blog", blogVars)
+	if err != nil {
+		log.Println("Error in executing blog template : ", err)
+		return
+	}
 }
 
 func fetchById(objectId primitive.ObjectID) model.Blog {

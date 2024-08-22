@@ -73,7 +73,11 @@ func ProcessLogin(w http.ResponseWriter, r *http.Request) {
 
 	t, _ := template.ParseFiles("./data/templates/admin_page_template.gohtml")
 
-	t.ExecuteTemplate(w, "Admin", vars)
+	err = t.ExecuteTemplate(w, "Admin", vars)
+	if err != nil {
+		log.Println("Error in executing admin template : ", err)
+		return
+	}
 }
 
 func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
@@ -81,7 +85,11 @@ func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
 
 	t, _ := template.ParseFiles("./data/templates/add_blog_template.gohtml")
 
-	t.ExecuteTemplate(w, "AddBlog", vars)
+	err := t.ExecuteTemplate(w, "AddBlog", vars)
+	if err != nil {
+		log.Println("Error in executing home template : ", err)
+		return
+	}
 }
 
 func ProcessPublishBlog(w http.ResponseWriter, r *http.Request) {
@@ -128,7 +136,10 @@ func ProcessPublishBlog(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(insertOneResult)
 
-	w.Write([]byte("Blog Added Successfully"))
+	_, err = w.Write([]byte("Blog Added Successfully"))
+	if err != nil {
+		return
+	}
 }
 
 func getBasePageVars() map[string]interface{} {

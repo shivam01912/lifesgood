@@ -27,7 +27,11 @@ func HomePageHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error parsing template : ", err)
 	}
 
-	t.ExecuteTemplate(w, "Home", homeVars)
+	err = t.ExecuteTemplate(w, "Home", homeVars)
+	if err != nil {
+		log.Println("Error in executing home template : ", err)
+		return
+	}
 }
 
 func addCards(vars map[string]interface{}) {
@@ -65,7 +69,11 @@ func addCards(vars map[string]interface{}) {
 			log.Println(err)
 		}
 
-		card.ExecuteTemplate(&buf, "Card", cardVars)
+		err = card.ExecuteTemplate(&buf, "Card", cardVars)
+		if err != nil {
+			log.Println("Error in executing card template : ", err)
+			return
+		}
 	}
 
 	vars["Content"] = template.HTML(buf.String())
