@@ -17,8 +17,7 @@ func HomePageHandler(w http.ResponseWriter, r *http.Request) {
 
 	homeVars := map[string]interface{}{}
 
-	util.AddHeader(homeVars)
-	util.AddFooter(homeVars)
+	util.PopulateBasePageVars(homeVars)
 	addCards(homeVars)
 
 	t, err := template.ParseFiles("./data/templates/home_template.gohtml")

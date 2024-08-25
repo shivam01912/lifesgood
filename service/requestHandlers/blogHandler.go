@@ -34,16 +34,19 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	date := time.Unix(blog.CreatedAt, 0).Format("2 Jan, 2006")
 
 	blogVars := map[string]interface{}{
-		"Link":    "/blog?id=" + blog.Title,
+		"Link":    "/blog/likes?id=" + objectId.Hex(),
 		"Title":   blog.Title,
 		"Content": template.HTML(string(html)),
 		"Tags":    blog.Tags,
 		"Date":    date,
 		"Likes":   blog.Likes,
+		//"BlogId":  objectId,
+		//"LikesIncrement": func(updatedLikesCount int, objectId primitive.ObjectID) {
+		//	admin.LikesIncrement(updatedLikesCount, objectId)
+		//},
 	}
 
-	util.AddHeader(blogVars)
-	util.AddFooter(blogVars)
+	util.PopulateBasePageVars(blogVars)
 
 	t, _ := template.ParseFiles("./data/templates/blog_template.gohtml")
 

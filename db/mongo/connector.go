@@ -2,10 +2,8 @@ package mongo
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"lifesgood/model"
 	"log"
 	"time"
 )
@@ -36,35 +34,4 @@ func Connect() (*mongo.Client, context.Context, context.CancelFunc) {
 	}
 
 	return client, ctx, cancel
-}
-
-func InsertOne(client *mongo.Client, ctx context.Context, dataBase, col string, doc model.Blog) (*mongo.InsertOneResult, error) {
-
-	collection := client.Database(dataBase).Collection(col)
-
-	result, err := collection.InsertOne(ctx, doc)
-
-	return result, err
-}
-
-func FindAll(client *mongo.Client, ctx context.Context, dataBase, col string, query, field interface{}) *mongo.Cursor {
-
-	collection := client.Database(dataBase).Collection(col)
-
-	result, err := collection.Find(ctx, query, options.Find().SetProjection(field).SetSort(bson.D{{"createdat", -1}}))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return result
-}
-
-func FindOne(client *mongo.Client, ctx context.Context, dataBase, col string, query, field interface{}) bson.M {
-
-	collection := client.Database(dataBase).Collection(col)
-
-	var result bson.M
-	collection.FindOne(ctx, query, options.FindOne().SetProjection(field)).Decode(&result)
-
-	return result
 }

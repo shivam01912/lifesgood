@@ -8,14 +8,21 @@
     <script src="https://kit.fontawesome.com/fd9d265553.js" crossorigin="anonymous"></script>
     <script>
         function toggleLikeIcon(icon) {
-            icon.classList.remove("fa-regular");
-            icon.classList.add("fa-solid");
 
-            var count = parseInt(document.getElementById("likeCount").innerHTML);
-            console.log(count);
-            count += 1;
-            document.getElementById("likeCount").innerHTML = count;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                console.log("State=",xhttp.readyState);
+                console.log("Status=",xhttp.status);
 
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    icon.classList.remove("fa-regular");
+                    icon.classList.add("fa-solid");
+
+                    document.getElementById("likeCount").innerHTML = xhttp.responseText;
+                }
+            };
+            xhttp.open("PUT", {{.Link}}, true);
+            xhttp.send();
         }
     </script>
 </head>
@@ -45,6 +52,7 @@
             </div>
 
             <div style="width: 20%; display: table-cell; text-align: center;">
+{{/*                <span onclick="toggleLikeIcon(this)" class="fa-regular fa-thumbs-up" id="likeCount" > {{.Likes}}</span>*/}}
                 <span onclick="toggleLikeIcon(this)" class="fa-regular fa-thumbs-up" id="likeCount" > {{.Likes}}</span>
             </div>
             
