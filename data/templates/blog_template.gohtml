@@ -11,18 +11,31 @@
 
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
-                console.log("State=",xhttp.readyState);
-                console.log("Status=",xhttp.status);
 
-                if (xhttp.readyState == 4 && xhttp.status == 200) {
-                    icon.classList.remove("fa-regular");
-                    icon.classList.add("fa-solid");
+                if (xhttp.readyState === 4 && xhttp.status === 200) {
+                    if (document.getElementById("likeCount").title === "not_liked") {
+                        icon.classList.remove("fa-regular");
+                        icon.classList.add("fa-solid");
 
-                    document.getElementById("likeCount").innerHTML = xhttp.responseText;
+                        document.getElementById("likeCount").innerHTML = xhttp.responseText;
+                        document.getElementById("likeCount").title = "liked"
+                    } else if (document.getElementById("likeCount").title === "liked") {
+                        icon.classList.remove("fa-solid");
+                        icon.classList.add("fa-regular");
+
+                        document.getElementById("likeCount").innerHTML = xhttp.responseText;
+                        document.getElementById("likeCount").title = "not_liked"
+                    }
                 }
             };
-            xhttp.open("PUT", {{.Link}}, true);
-            xhttp.send();
+
+            if (document.getElementById("likeCount").title === "not_liked") {
+                xhttp.open("PUT", {{.Link}} + "&inc=true", true);
+                xhttp.send();
+            } else if (document.getElementById("likeCount").title === "liked") {
+                xhttp.open("PUT", {{.Link}} + "&inc=false", true);
+                xhttp.send();
+            }
         }
     </script>
 </head>
@@ -52,8 +65,7 @@
             </div>
 
             <div style="width: 20%; display: table-cell; text-align: center;">
-{{/*                <span onclick="toggleLikeIcon(this)" class="fa-regular fa-thumbs-up" id="likeCount" > {{.Likes}}</span>*/}}
-                <span onclick="toggleLikeIcon(this)" class="fa-regular fa-thumbs-up" id="likeCount" > {{.Likes}}</span>
+                <span onclick="toggleLikeIcon(this)" class="fa-regular fa-thumbs-up" title="not_liked" id="likeCount" > {{.Likes}}</span>
             </div>
             
             <div style="width: 40%; display: table-cell; text-align: right;"> {{.Date}} </div>

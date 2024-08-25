@@ -11,7 +11,6 @@ import (
 	"strconv"
 )
 
-// func LikesIncrement(updatedLikesCount int, objectId primitive.ObjectID) {
 func LikesIncrement(w http.ResponseWriter, r *http.Request) {
 
 	//fetch blog likes
@@ -49,11 +48,21 @@ func LikesIncrement(w http.ResponseWriter, r *http.Request) {
 
 	//update the blog likes
 
-	post := bson.D{{"$set", bson.M{
-		"likes": blog.Likes + 1,
-	}}}
+	inc, ok := r.URL.Query()["inc"]
 
-	//filter = bson.D{{"$_id", objectId}}
+	doInc, _ := strconv.ParseBool(inc[0])
+
+	newLikes := 0
+
+	if doInc {
+		newLikes = blog.Likes + 1
+	} else {
+		newLikes = blog.Likes - 1
+	}
+
+	post := bson.D{{"$set", bson.M{
+		"likes": newLikes,
+	}}}
 
 	updateOneResult, err := mongo.UpdateBlog(client, ctx, "lifesgood", "blogs", filter, post)
 	if err != nil {
@@ -70,10 +79,8 @@ func LikesIncrement(w http.ResponseWriter, r *http.Request) {
 		log.Println("Unable to Unmarshal Blog")
 	}
 
-	log.Println(updateOneResult)
-
 	//return new likes count
-	_, err = fmt.Fprintf(w, strconv.Itoa(blog.Likes+1))
+	_, err = fmt.Fprintf(w, strconv.Itoa(newLikes))
 	if err != nil {
 		return
 	}
