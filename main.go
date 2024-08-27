@@ -6,13 +6,15 @@ import (
 	"lifesgood/app/requestHandler"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
-	err := godotenv.Load()
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
+	if os.Getenv("ENV") != "prod" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatalf("Error loading .env file")
+		}
 	}
 
 	fs := http.FileServer(http.Dir("./data/templates"))
