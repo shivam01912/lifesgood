@@ -23,7 +23,7 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, username string, v
 		Name:     "adminCookie",
 		Value:    username + "#" + value,
 		Path:     "/",
-		MaxAge:   15,
+		MaxAge:   3600,
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteLaxMode,
@@ -74,7 +74,7 @@ func writeEncrypted(w http.ResponseWriter, cookie *http.Cookie, secretKey []byte
 	encryptedValue := base64.URLEncoding.EncodeToString(aesGCM.Seal(nonce, nonce, []byte(plaintext), nil))
 
 	// Set the cookie value to the encryptedValue.
-	cookie.Value = string(encryptedValue)
+	cookie.Value = encryptedValue
 }
 
 func ValidateCookie(r *http.Request, cookieName string) bool {
