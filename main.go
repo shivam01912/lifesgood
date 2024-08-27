@@ -34,7 +34,5 @@ func main() {
 	http.HandleFunc("/admin/addblog", admin.AddBlogHandler)
 	http.HandleFunc("/admin/addblog/publish", admin.ProcessPublishBlog)
 
-	//http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("../data"))))
-
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
