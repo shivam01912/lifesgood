@@ -35,6 +35,8 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, username string, v
 	// Behind the scenes this adds a `Set-Cookie` header to the response
 	// containing the necessary cookie data.
 	http.SetCookie(w, &cookie)
+
+	r.AddCookie(&cookie)
 }
 
 func writeEncrypted(w http.ResponseWriter, cookie *http.Cookie, secretKey []byte) {
