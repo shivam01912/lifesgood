@@ -33,7 +33,7 @@ func LikesIncrement(w http.ResponseWriter, r *http.Request) {
 	client, ctx, cancel := mongo.Connect()
 	defer mongo.Close(client, ctx, cancel)
 
-	result := mongo.FindOne(client, ctx, "lifesgood", "blogs", filter, option)
+	result := mongo.FindOne(client, ctx, mongo.DBName, mongo.BlogCollection, filter, option)
 
 	data, err := bson.Marshal(result)
 	if err != nil {
@@ -64,7 +64,7 @@ func LikesIncrement(w http.ResponseWriter, r *http.Request) {
 		"likes": newLikes,
 	}}}
 
-	updateOneResult, err := mongo.UpdateBlog(client, ctx, "lifesgood", "blogs", filter, post)
+	updateOneResult, err := mongo.UpdateBlog(client, ctx, mongo.DBName, mongo.BlogCollection, filter, post)
 	if err != nil {
 		log.Println("Failed to update the likes for the blog with id : ", objectId, err)
 	}

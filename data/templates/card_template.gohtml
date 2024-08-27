@@ -8,19 +8,33 @@
 
         <div class="card-footer">
             <div style="display: table-row">
-                <div style="width: 40%; display: table-cell; text-align: left;">
-                    <i class="fa-solid fa-tags"></i> 
-                    {{range .Tags}}
-                        {{.}} | 
-                    {{end}}
-                </div>
+                {{ if .IsHomeFlow}}
+                    <div style="width: 40%; display: table-cell; text-align: left;">
+                        <i class="fa-solid fa-tags"></i>
+                        {{range .Tags}}
+                            {{.}} |
+                        {{end}}
+                    </div>
 
-                <div style="width: 20%; display: table-cell; text-align: center;">
-                    <i class="fa-solid fa-thumbs-up"></i>
-                    {{.Likes}}
-                </div>
+                    <div style="width: 20%; display: table-cell; text-align: center;">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                        {{.Likes}}
+                    </div>
 
-                <div style="width: 40%; display: table-cell; text-align: right;"> {{.Date}} </div>
+                    <div style="width: 40%; display: table-cell; text-align: right;"> {{.Date}} </div>
+                {{else}}
+                    <a href={{.UpdateLink}}>
+                        <div style="width: 50%; display: table-cell; text-align: center; font-weight: bold;">
+                            UPDATE
+                        </div>
+                    </a>
+
+                    <a href={{.DeleteLink}}>
+                        <div style="width: 50%; display: table-cell; text-align: center; font-weight: bold;">
+                            DELETE
+                        </div>
+                    </a>
+                {{end}}
             </div>
         </div>
     </div>

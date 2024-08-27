@@ -1,23 +1,32 @@
 package main
 
 import (
-	"lifesgood/service/admin"
-	"lifesgood/service/requestHandlers"
+	"github.com/joho/godotenv"
+	"lifesgood/app/admin"
+	"lifesgood/app/requestHandler"
 	"log"
 	"net/http"
 )
 
 func main() {
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
 	fs := http.FileServer(http.Dir("./data/templates"))
 	http.Handle("/css/", fs)
 
-	http.HandleFunc("/", requestHandlers.HomePageHandler)
-	http.HandleFunc("/home", requestHandlers.HomePageHandler)
-	http.HandleFunc("/blog", requestHandlers.BlogHandler)
+	http.HandleFunc("/", requestHandler.HomePageHandler)
+	http.HandleFunc("/home", requestHandler.HomePageHandler)
+
+	http.HandleFunc("/blog", requestHandler.BlogHandler)
 
 	http.HandleFunc("/blog/likes", admin.LikesIncrement)
 
 	http.HandleFunc("/admin/login", admin.LoginHandler)
+	http.HandleFunc("/admin/home", admin.AdminHome)
 	http.HandleFunc("/admin", admin.ProcessLogin)
 
 	http.HandleFunc("/admin/addblog", admin.AddBlogHandler)

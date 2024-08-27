@@ -1,39 +1,17 @@
-package requestHandlers
+package provider
 
 import (
 	"bytes"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"html/template"
+	"lifesgood/app/config"
 	"lifesgood/db/mongo"
-	"lifesgood/service/util"
 	"log"
-	"net/http"
 	"time"
 )
 
-func HomePageHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-
-	homeVars := map[string]interface{}{}
-
-	util.PopulateBasePageVars(homeVars)
-	addCards(homeVars)
-
-	t, err := template.ParseFiles("./data/templates/home_template.gohtml")
-
-	if err != nil {
-		log.Println("Error parsing template : ", err)
-	}
-
-	err = t.ExecuteTemplate(w, "Home", homeVars)
-	if err != nil {
-		log.Println("Error in executing home template : ", err)
-		return
-	}
-}
-
-func addCards(vars map[string]interface{}) {
+func AddCards(vars map[string]interface{}, flow config.Flow) {
 	var buf bytes.Buffer
 	var filter, option interface{}
 	filter = bson.D{}
@@ -42,7 +20,7 @@ func addCards(vars map[string]interface{}) {
 	client, ctx, cancel := mongo.Connect()
 	defer mongo.Close(client, ctx, cancel)
 
-	cursor := mongo.FindAll(client, ctx, "lifesgood", "blogs", filter, option)
+	cursor := mongo.FindAll(client, ctx, mongo.DBName, mongo.BlogCollection, filter, option)
 
 	var results []bson.M
 	if err := cursor.All(ctx, &results); err != nil {
@@ -54,12 +32,15 @@ func addCards(vars map[string]interface{}) {
 		d, _ := blog["createdat"].(int64)
 		date := time.Unix(d, 0).Format("2 Jan, 2006")
 		cardVars := map[string]interface{}{
-			"Title": blog["title"],
-			"Brief": blog["brief"],
-			"Tags":  blog["tags"],
-			"Date":  date,
-			"Likes": blog["likes"],
-			"Link":  "/blog?id=" + blog["_id"].(primitive.ObjectID).Hex(),
+			"Title":      blog["title"],
+			"Brief":      blog["brief"],
+			"Tags":       blog["tags"],
+			"Date":       date,
+			"Likes":      blog["likes"],
+			"Link":       "/blog?id=" + blog["_id"].(primitive.ObjectID).Hex(),
+			"IsHomeFlow": isHomeFlow(flow),
+			"UpdateLink": "/blog/update?id=" + blog["_id"].(primitive.ObjectID).Hex(),
+			"DeleteLink": "/blog/delete?id=" + blog["_id"].(primitive.ObjectID).Hex(),
 		}
 
 		card, err := template.ParseFiles("./data/templates/card_template.gohtml")
@@ -76,4 +57,13 @@ func addCards(vars map[string]interface{}) {
 	}
 
 	vars["Content"] = template.HTML(buf.String())
+}
+
+func isHomeFlow(flow config.Flow) bool {
+	if flow == config.HOME {
+		return true
+	} else if flow == config.DELETE || flow == config.UPDATE {
+		return false
+	}
+	return false
 }

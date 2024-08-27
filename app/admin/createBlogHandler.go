@@ -3,9 +3,9 @@ package admin
 import (
 	"html/template"
 	"io"
+	"lifesgood/app/util"
 	"lifesgood/db/mongo"
 	"lifesgood/model"
-	"lifesgood/service/util"
 	"log"
 	"net/http"
 	"strings"
@@ -13,6 +13,11 @@ import (
 )
 
 func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
+	if !util.ValidateCookie(r, "adminCookie") {
+		w.Write([]byte("You are not an admin"))
+		return
+	}
+
 	vars := util.ConstructBasePageVars()
 
 	t, _ := template.ParseFiles("./data/templates/add_blog_template.gohtml")
@@ -25,6 +30,11 @@ func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProcessPublishBlog(w http.ResponseWriter, r *http.Request) {
+	if !util.ValidateCookie(r, "adminCookie") {
+		w.Write([]byte("You are not an admin"))
+		return
+	}
+
 	err := r.ParseMultipartForm(10 << 10)
 	if err != nil {
 		log.Fatal(err)
@@ -58,7 +68,7 @@ func ProcessPublishBlog(w http.ResponseWriter, r *http.Request) {
 	client, ctx, cancel := mongo.Connect()
 	defer mongo.Close(client, ctx, cancel)
 
-	insertOneResult, err := mongo.InsertBlog(client, ctx, "lifesgood", "blogs", post)
+	insertOneResult, err := mongo.InsertBlog(client, ctx, mongo.DBName, mongo.BlogCollection, post)
 
 	if err != nil {
 		w.Write([]byte("Unable to Publish blog"))

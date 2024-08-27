@@ -1,13 +1,13 @@
-package requestHandlers
+package requestHandler
 
 import (
 	"github.com/gomarkdown/markdown"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"html/template"
+	"lifesgood/app/util"
 	"lifesgood/db/mongo"
 	"lifesgood/model"
-	"lifesgood/service/util"
 	"log"
 	"net/http"
 	"time"
@@ -40,10 +40,6 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		"Tags":    blog.Tags,
 		"Date":    date,
 		"Likes":   blog.Likes,
-		//"BlogId":  objectId,
-		//"LikesIncrement": func(updatedLikesCount int, objectId primitive.ObjectID) {
-		//	admin.LikesIncrement(updatedLikesCount, objectId)
-		//},
 	}
 
 	util.PopulateBasePageVars(blogVars)
@@ -65,7 +61,7 @@ func fetchById(objectId primitive.ObjectID) model.Blog {
 	client, ctx, cancel := mongo.Connect()
 	defer mongo.Close(client, ctx, cancel)
 
-	result := mongo.FindOne(client, ctx, "lifesgood", "blogs", filter, option)
+	result := mongo.FindOne(client, ctx, mongo.DBName, mongo.BlogCollection, filter, option)
 
 	data, err := bson.Marshal(result)
 	if err != nil {
