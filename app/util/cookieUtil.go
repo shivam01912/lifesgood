@@ -81,6 +81,7 @@ func ValidateCookie(r *http.Request, cookieName string) bool {
 	secretKey := []byte(os.Getenv("AES_Key"))
 	value, err := readEncrypted(r, cookieName, secretKey)
 	if err != nil {
+		log.Fatal("Error : ", err)
 		return false
 	}
 
