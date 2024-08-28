@@ -53,7 +53,7 @@ func ProcessLogin(w http.ResponseWriter, r *http.Request) {
 
 func AdminHome(w http.ResponseWriter, r *http.Request) {
 
-	if !util.ValidateCookie(r, "session") {
+	if !util.ValidateCookie(r, "__session") {
 		w.Write([]byte("You are not an admin"))
 		return
 	}

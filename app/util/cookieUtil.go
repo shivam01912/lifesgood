@@ -20,11 +20,11 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, username string, v
 	// Initialize a new cookie containing the string "Hello world!" and some
 	// non-default attributes.
 	cookie := http.Cookie{
-		Name:     "session",
+		Name:     "__session",
 		Value:    username + "#" + value,
 		Path:     "/",
 		MaxAge:   3600,
-		HttpOnly: false,
+		HttpOnly: true,
 		Secure:   false,
 		SameSite: http.SameSiteLaxMode,
 	}
@@ -35,6 +35,8 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, username string, v
 	// Behind the scenes this adds a `Set-Cookie` header to the response
 	// containing the necessary cookie data.
 	http.SetCookie(w, &cookie)
+
+	w.Header().Set("Cache-Control", "private")
 
 	r.AddCookie(&cookie)
 }
