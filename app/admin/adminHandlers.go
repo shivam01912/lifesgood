@@ -44,6 +44,10 @@ func ProcessLogin(w http.ResponseWriter, r *http.Request) {
 
 	util.SetCookieHandler(w, r, credentials.Username, credentials.Password)
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+
 	http.Redirect(w, r, "/admin/home", http.StatusSeeOther)
 }
 
