@@ -20,7 +20,7 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, username string, v
 	// Initialize a new cookie containing the string "Hello world!" and some
 	// non-default attributes.
 	cookie := http.Cookie{
-		Name:     "adminCookie",
+		Name:     "session",
 		Value:    username + "#" + value,
 		Path:     "/",
 		MaxAge:   3600,

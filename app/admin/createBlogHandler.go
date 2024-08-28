@@ -13,7 +13,7 @@ import (
 )
 
 func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
-	if !util.ValidateCookie(r, "adminCookie") {
+	if !util.ValidateCookie(r, "session") {
 		w.Write([]byte("You are not an admin"))
 		return
 	}
@@ -30,7 +30,7 @@ func AddBlogHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProcessPublishBlog(w http.ResponseWriter, r *http.Request) {
-	if !util.ValidateCookie(r, "adminCookie") {
+	if !util.ValidateCookie(r, "session") {
 		w.Write([]byte("You are not an admin"))
 		return
 	}
