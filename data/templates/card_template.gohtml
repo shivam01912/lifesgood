@@ -1,5 +1,7 @@
 {{define "Card"}}
-<a href={{.Link}}>
+{{ if .IsHomeFlow}}
+    <a href={{.Link}}>
+{{end}}
     <div class="card">
         <p class="heading">{{.Title}}</p>
         <p class="brief">{{.Brief}}</p>
@@ -23,20 +25,23 @@
 
                     <div style="width: 40%; display: table-cell; text-align: right;"> {{.Date}} </div>
                 {{else}}
-                    <a href={{.UpdateLink}}>
-                        <div style="width: 50%; display: table-cell; text-align: center; font-weight: bold;">
+                    <div style="width: 50%; display: table-cell; text-align: center; font-weight: bold;">
+                        <a style="color: #d3b3b3" href={{.UpdateLink}}>
                             UPDATE
-                        </div>
-                    </a>
+                        </a>
+                    </div>
 
-                    <a href={{.DeleteLink}}>
-                        <div style="width: 50%; display: table-cell; text-align: center; font-weight: bold;">
+                    <div style="width: 50%; display: table-cell; text-align: center; font-weight: bold;">
+                        <a style="color: #d3b3b3" href={{.DeleteLink}}>
                             DELETE
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 {{end}}
             </div>
         </div>
     </div>
-</a>
+{{ if .IsHomeFlow}}
+    </a>
+{{end}}
+
 {{end}}

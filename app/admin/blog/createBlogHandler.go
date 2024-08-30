@@ -1,4 +1,4 @@
-package admin
+package blog
 
 import (
 	"html/template"

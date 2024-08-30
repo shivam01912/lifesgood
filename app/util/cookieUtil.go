@@ -25,7 +25,7 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, username string, v
 		Path:     "/",
 		MaxAge:   3600,
 		HttpOnly: true,
-		Secure:   false,
+		Secure:   true,
 		SameSite: http.SameSiteLaxMode,
 	}
 
@@ -104,8 +104,6 @@ func ValidateCookie(r *http.Request, cookieName string) bool {
 
 func readEncrypted(r *http.Request, name string, secretKey []byte) (string, error) {
 	// Read the encrypted value from the cookie as normal.
-	log.Println("Reading cookie with name : ", name)
-	log.Println("Request : ", r)
 	cookie, err := r.Cookie(name)
 	if err != nil {
 		return "", err
