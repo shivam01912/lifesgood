@@ -35,6 +35,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 
 	blogVars := map[string]interface{}{
 		"Link":          "/blog/likes?id=" + objectId.Hex(),
+		"ViewsLink":     "/blog/views?id=" + objectId.Hex(),
 		"Title":         blog.Title,
 		"Content":       template.HTML(string(html)),
 		"Tags":          blog.Tags,

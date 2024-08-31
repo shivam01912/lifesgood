@@ -131,6 +131,46 @@ func ProcessUpdateBlog(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func ViewsIncrement(w http.ResponseWriter, r *http.Request) {
+	id, ok := r.URL.Query()["id"]
+
+	if !ok || len(id) < 1 {
+		log.Println("Url Param 'id' is missing")
+		return
+	}
+
+	objectId, err := primitive.ObjectIDFromHex(id[0])
+	if err != nil {
+		log.Println("Invalid id")
+	}
+
+	var filter interface{}
+	filter = bson.D{{"_id", objectId}}
+
+	post := bson.D{{"$inc", bson.M{
+		"views": 1,
+	}}}
+
+	client, ctx, cancel := mongo.Connect()
+	defer mongo.Close(client, ctx, cancel)
+
+	updateOneResult, err := mongo.UpdateBlog(client, ctx, mongo.DBName, mongo.BlogCollection, filter, post)
+	if err != nil {
+		log.Println("Failed to update the likes for the blog with id : ", objectId, err)
+	}
+
+	data, err := bson.Marshal(updateOneResult)
+	if err != nil {
+		log.Println("Unable to marshal Blog")
+	}
+
+	var blog model.Blog
+	err = bson.Unmarshal(data, &blog)
+	if err != nil {
+		log.Println("Unable to Unmarshal Blog")
+	}
+}
+
 func LikesIncrement(w http.ResponseWriter, r *http.Request) {
 	id, ok := r.URL.Query()["id"]
 

@@ -7,6 +7,13 @@
     </style>
     <script src="https://kit.fontawesome.com/fd9d265553.js" crossorigin="anonymous"></script>
     <script>
+        window.onload = function() {
+            var xhttp = new XMLHttpRequest();
+
+            xhttp.open("PUT", {{.ViewsLink}}, true);
+            xhttp.send();
+        };
+
         function toggleLikeIcon(icon) {
 
             var xhttp = new XMLHttpRequest();

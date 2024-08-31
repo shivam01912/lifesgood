@@ -34,16 +34,19 @@ func main() {
 	router.HandleFunc("/admin/home", admin.AdminHome)
 	router.HandleFunc("/admin", admin.ProcessLogin)
 
+	//common blog handlers
+	go router.HandleFunc("/blog/likes", adminBlogHandler.LikesIncrement)
+	go router.HandleFunc("/blog/views", adminBlogHandler.ViewsIncrement)
+
 	//create blog handlers
 	router.HandleFunc("/admin/addblog", adminBlogHandler.AddBlogHandler)
 	router.HandleFunc("/admin/blog/preview", adminBlogHandler.PreviewBlog)
 	router.HandleFunc("/admin/blog/publish", adminBlogHandler.ProcessPublishBlog)
 
-	//common blag handlers
+	//common admin handlers
 	router.HandleFunc("/admin/modifyblog", adminBlogHandler.DeletePageHandler)
 
 	//update blog handlers
-	router.HandleFunc("/blog/likes", adminBlogHandler.LikesIncrement)
 	router.HandleFunc("/admin/updateblog", adminBlogHandler.UpdateBlogPageHandler)
 	router.HandleFunc("/blog/update", adminBlogHandler.ProcessUpdateBlog)
 
