@@ -25,18 +25,18 @@ func main() {
 	router.PathPrefix("/css/").Handler(fs)
 
 	//direct REST API handler
-	router.HandleFunc("/", requestHandler.HomePageHandler)
-	router.HandleFunc("/home", requestHandler.HomePageHandler)
-	router.HandleFunc("/blog", requestHandler.BlogHandler)
+	go router.HandleFunc("/", requestHandler.HomePageHandler)
+	go router.HandleFunc("/home", requestHandler.HomePageHandler)
+	go router.HandleFunc("/blog", requestHandler.BlogHandler)
 
 	//admin login handlers
 	router.HandleFunc("/admin/login", admin.LoginHandler)
 	router.HandleFunc("/admin/home", admin.AdminHome)
 	router.HandleFunc("/admin", admin.ProcessLogin)
 
-	//common blog handlers
-	go router.HandleFunc("/blog/likes", adminBlogHandler.LikesIncrement)
-	go router.HandleFunc("/blog/views", adminBlogHandler.ViewsIncrement)
+	//blog counter update handlers
+	go router.HandleFunc("/blog/likes", requestHandler.LikesIncrement)
+	go router.HandleFunc("/blog/views", requestHandler.ViewsIncrement)
 
 	//create blog handlers
 	router.HandleFunc("/admin/addblog", adminBlogHandler.AddBlogHandler)
