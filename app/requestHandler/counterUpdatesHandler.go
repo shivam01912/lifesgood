@@ -12,6 +12,17 @@ import (
 )
 
 func ViewsIncrement(w http.ResponseWriter, r *http.Request) {
+	ch := make(chan int)
+	go updateBlogViews(w, r, ch)
+
+	//return new views count
+	_, err := fmt.Fprintf(w, strconv.Itoa(<-ch))
+	if err != nil {
+		return
+	}
+}
+
+func updateBlogViews(w http.ResponseWriter, r *http.Request, ch chan int) {
 	id, ok := r.URL.Query()["id"]
 
 	if !ok || len(id) < 1 {
@@ -40,11 +51,7 @@ func ViewsIncrement(w http.ResponseWriter, r *http.Request) {
 		log.Println("Failed to update the likes for the blog with id : ", objectId, err)
 	}
 
-	//return new views count
-	_, err = fmt.Fprintf(w, strconv.Itoa(blog.Views))
-	if err != nil {
-		return
-	}
+	ch <- blog.Views
 }
 
 func LikesIncrement(w http.ResponseWriter, r *http.Request) {
@@ -64,20 +71,21 @@ func LikesIncrement(w http.ResponseWriter, r *http.Request) {
 	filter = bson.D{{"_id", objectId}}
 
 	//update the blog likes
-	newLikes := updateBlogLikes(r, filter)
+	ch := make(chan int)
+	go updateBlogLikes(r, filter, ch)
 
 	//return new likes count
-	_, err = fmt.Fprintf(w, strconv.Itoa(newLikes))
+	_, err = fmt.Fprintf(w, strconv.Itoa(<-ch))
 	if err != nil {
 		return
 	}
 }
 
-func updateBlogLikes(r *http.Request, filter interface{}) int {
+func updateBlogLikes(r *http.Request, filter interface{}, ch chan int) {
 	inc, ok := r.URL.Query()["inc"]
 	if !ok {
 		log.Println("Url Param 'inc' is missing")
-		return 0
+		ch <- 0
 	}
 
 	doInc, _ := strconv.ParseBool(inc[0])
@@ -100,5 +108,5 @@ func updateBlogLikes(r *http.Request, filter interface{}) int {
 	var blog model.Blog
 	mongo.UpdateBlog(client, ctx, mongo.DBName, mongo.BlogCollection, filter, post).Decode(&blog)
 
-	return blog.Likes
+	ch <- blog.Likes
 }
