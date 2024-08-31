@@ -36,14 +36,23 @@ func main() {
 
 	//create blog handlers
 	router.HandleFunc("/admin/addblog", adminBlogHandler.AddBlogHandler)
-	router.HandleFunc("/admin/addblog/publish", adminBlogHandler.ProcessPublishBlog)
+	router.HandleFunc("/admin/blog/preview", adminBlogHandler.PreviewBlog)
+	router.HandleFunc("/admin/blog/publish", adminBlogHandler.ProcessPublishBlog)
+
+	//common blag handlers
+	router.HandleFunc("/admin/modifyblog", adminBlogHandler.DeletePageHandler)
 
 	//update blog handlers
 	router.HandleFunc("/blog/likes", adminBlogHandler.LikesIncrement)
+	router.HandleFunc("/admin/updateblog", adminBlogHandler.UpdateBlogPageHandler)
+	router.HandleFunc("/blog/update", adminBlogHandler.ProcessUpdateBlog)
 
 	//delete blog handlers
-	router.HandleFunc("/admin/deleteblog", adminBlogHandler.DeletePageHandler)
 	router.HandleFunc("/blog/delete", adminBlogHandler.DeleteBlogHandler)
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	err := http.ListenAndServe(":8080", router)
+	if err != nil {
+		log.Println("Unknown error : ", err)
+		return
+	}
 }

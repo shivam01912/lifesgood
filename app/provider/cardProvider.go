@@ -24,7 +24,7 @@ func AddCards(vars map[string]interface{}, flow config.Flow) {
 
 	var results []bson.M
 	if err := cursor.All(ctx, &results); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	log.Println("Number of blogs fetched : ", len(results))
 
@@ -39,7 +39,7 @@ func AddCards(vars map[string]interface{}, flow config.Flow) {
 			"Likes":      blog["likes"],
 			"Link":       "/blog?id=" + blog["_id"].(primitive.ObjectID).Hex(),
 			"IsHomeFlow": isHomeFlow(flow),
-			"UpdateLink": "/blog/update?id=" + blog["_id"].(primitive.ObjectID).Hex(),
+			"UpdateLink": "/admin/updateblog?id=" + blog["_id"].(primitive.ObjectID).Hex(),
 			"DeleteLink": "/blog/delete?id=" + blog["_id"].(primitive.ObjectID).Hex(),
 		}
 
@@ -62,8 +62,6 @@ func AddCards(vars map[string]interface{}, flow config.Flow) {
 func isHomeFlow(flow config.Flow) bool {
 	if flow == config.HOME {
 		return true
-	} else if flow == config.DELETE || flow == config.UPDATE {
-		return false
 	}
 	return false
 }

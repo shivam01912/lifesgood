@@ -1,0 +1,26 @@
+{{define "UpdateBlog"}}
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css" media="screen">
+            @import url("/css/base-styles.css");
+            @import url("/css/admin-styles.css");
+        </style>
+    </head>
+
+    {{.Navbar}}
+
+    <body>
+    <div class="container">
+        <form method="POST" action="/admin/blog/publish" enctype="multipart/form-data">
+            <input type="text" id="blog_title" name="title" placeholder="Blog Name" value={{.Title}}><br><br>
+            <input type="text" id="blog_brief" name="brief" placeholder="Blog Brief" value={{.Brief}}><br><br>
+            <input type="text" id="blog_tags" name="tags" placeholder="Tags" value={{.Tags}}><br><br>
+            <input type="file" id="blog_content" name="content" required><br><br>
+            <input type="submit" formaction="/admin/blog/preview" formtarget="_blank" name ="preview" value="Preview">
+            <input type="submit" name="publish" value="Update" formaction={{.Link}}>
+        </form>
+    </div>
+    </body>
+
+    {{.Footer}}
+{{end}}

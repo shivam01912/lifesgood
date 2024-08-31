@@ -14,7 +14,7 @@ func FindAll(client *mongo.Client, ctx context.Context, dataBase, col string, qu
 
 	result, err := collection.Find(ctx, query, options.Find().SetProjection(field).SetSort(bson.D{{"createdat", -1}}))
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return result

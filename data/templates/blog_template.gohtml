@@ -65,7 +65,11 @@
             </div>
 
             <div style="width: 20%; display: table-cell; text-align: center;">
-                <span onclick="toggleLikeIcon(this)" class="fa-regular fa-thumbs-up" title="not_liked" id="likeCount" > {{.Likes}}</span>
+                {{if .IsPreviewFlow}}
+                    <span class="fa-regular fa-thumbs-up" title="not_liked" id="likeCount" > {{.Likes}}</span>
+                {{else}}
+                    <span onclick="toggleLikeIcon(this)" class="fa-regular fa-thumbs-up" title="not_liked" id="likeCount" > {{.Likes}}</span>
+                {{end}}
             </div>
             
             <div style="width: 40%; display: table-cell; text-align: right;"> {{.Date}} </div>

@@ -30,7 +30,7 @@ func Connect() (*mongo.Client, context.Context, context.CancelFunc) {
 	client, err := mongo.Connect(ctx, clientOptions)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return client, ctx, cancel

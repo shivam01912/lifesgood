@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 var ErrInvalidValue = errors.New("invalid admin cookie value")
@@ -81,21 +82,27 @@ func writeEncrypted(w http.ResponseWriter, cookie *http.Cookie, secretKey []byte
 	cookie.Value = encryptedValue
 }
 
-func ValidateCookie(r *http.Request, cookieName string) bool {
+func ValidateCookie(w http.ResponseWriter, r *http.Request) bool {
 	secretKey := []byte(os.Getenv("AES_Key"))
-	value, err := readEncrypted(r, cookieName, secretKey)
+	value, err := readEncrypted(r, "__session", secretKey)
 	if err != nil {
-		log.Fatal("Error : ", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("You are not an admin..."))
+		log.Println("Error validating identity : ", err)
+
+		time.Sleep(5 * time.Second)
 		return false
 	}
 
 	expectedUsername, passHash, ok := strings.Cut(value, "#")
 	if !ok {
+		log.Println("Unable to parse username and password.")
 		return false
 	}
 
 	credentials := FetchAdminCredentials(expectedUsername)
 	if credentials.Password != passHash {
+		log.Println("You are not an admin.")
 		return false
 	}
 

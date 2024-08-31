@@ -11,12 +11,13 @@
 
 <body>
     <div class="container">
-        <form method="POST" action="/admin/addblog/publish" enctype="multipart/form-data">
-            <input type="text" id="blog_title" name="title" placeholder="Blog Name"><br><br>
+        <form method="POST" action="/admin/blog/publish" enctype="multipart/form-data">
+            <input type="text" id="blog_title" name="title" placeholder="Blog Name" required><br><br>
             <input type="text" id="blog_brief" name="brief" placeholder="Blog Brief"><br><br>
-            <input type="text" id="blog_tags" name="tags" placeholder="Tags"><br><br>
-            <input type="file" id="blog_content" name="content"><br><br>
-            <input type="submit" value="Publish">
+            <input type="text" id="blog_tags" name="tags" placeholder="Tags" required><br><br>
+            <input type="file" id="blog_content" name="content" required><br><br>
+            <input type="submit" formaction="/admin/blog/preview" formtarget="_blank" name ="preview" value="Preview">
+            <input type="submit" formaction="/admin/blog/publish" name="publish" value="Publish">
         </form>
     </div>    
 </body>

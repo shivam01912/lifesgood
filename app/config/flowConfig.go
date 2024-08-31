@@ -4,6 +4,7 @@ type Flow int
 
 const (
 	HOME Flow = iota
-	DELETE
+	CREATE
 	UPDATE
+	DELETE
 )

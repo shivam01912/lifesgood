@@ -28,7 +28,7 @@ func CheckPasswordHash(password, hash string) bool {
 func ProcessLogin(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	credentials := util.FetchAdminCredentials(r.PostForm.Get("username"))
@@ -53,8 +53,7 @@ func ProcessLogin(w http.ResponseWriter, r *http.Request) {
 
 func AdminHome(w http.ResponseWriter, r *http.Request) {
 
-	if !util.ValidateCookie(r, "__session") {
-		w.Write([]byte("You are not an admin"))
+	if !util.ValidateCookie(w, r) {
 		return
 	}
 

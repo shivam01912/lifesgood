@@ -34,12 +34,13 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	date := time.Unix(blog.CreatedAt, 0).Format("2 Jan, 2006")
 
 	blogVars := map[string]interface{}{
-		"Link":    "/blog/likes?id=" + objectId.Hex(),
-		"Title":   blog.Title,
-		"Content": template.HTML(string(html)),
-		"Tags":    blog.Tags,
-		"Date":    date,
-		"Likes":   blog.Likes,
+		"Link":          "/blog/likes?id=" + objectId.Hex(),
+		"Title":         blog.Title,
+		"Content":       template.HTML(string(html)),
+		"Tags":          blog.Tags,
+		"Date":          date,
+		"Likes":         blog.Likes,
+		"IsPreviewFlow": false,
 	}
 
 	util.PopulateBasePageVars(blogVars)

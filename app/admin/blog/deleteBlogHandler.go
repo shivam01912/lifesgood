@@ -38,13 +38,13 @@ func DeleteBlogHandler(w http.ResponseWriter, r *http.Request) {
 	id, ok := r.URL.Query()["id"]
 
 	if !ok || len(id) < 1 {
-		log.Fatal("Url Param 'id' is missing")
+		log.Println("Url Param 'id' is missing")
 		return
 	}
 
 	objectId, err := primitive.ObjectIDFromHex(id[0])
 	if err != nil {
-		log.Fatal("Invalid id")
+		log.Println("Invalid id")
 		return
 	}
 
