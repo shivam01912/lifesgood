@@ -41,6 +41,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		"Tags":          blog.Tags,
 		"Date":          date,
 		"Likes":         blog.Likes,
+		"Views":         blog.Views,
 		"IsPreviewFlow": false,
 	}
 

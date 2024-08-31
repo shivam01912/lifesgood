@@ -41,6 +41,7 @@ func PreviewBlog(w http.ResponseWriter, r *http.Request) {
 		"Tags":          tags,
 		"Date":          time.Unix(time.Now().Unix(), 0).Format("2 Jan, 2006"),
 		"Likes":         0,
+		"Views":         0,
 		"IsPreviewFlow": true,
 	}
 

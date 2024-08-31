@@ -7,12 +7,20 @@
     </style>
     <script src="https://kit.fontawesome.com/fd9d265553.js" crossorigin="anonymous"></script>
     <script>
-        window.onload = function() {
-            var xhttp = new XMLHttpRequest();
+        {{if not .IsPreviewFlow}}
+            window.onload = function() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
 
-            xhttp.open("PUT", {{.ViewsLink}}, true);
-            xhttp.send();
-        };
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        document.getElementById("viewCount").innerHTML = xhttp.responseText;
+                    }
+                };
+
+                xhttp.open("PUT", {{.ViewsLink}}, true);
+                xhttp.send();
+            };
+        {{end}}
 
         function toggleLikeIcon(icon) {
 
@@ -64,14 +72,18 @@
     <div class="container">
        <div class="blog-footer">
         <div style="display: table-row">
-            <div style="width: 40%; display: table-cell; text-align: left;">
+            <div style="width: 35%; display: table-cell; text-align: left;">
                 <i class="fa-solid fa-tags"></i> 
                 {{range .Tags}}
                     {{.}} | 
                 {{end}}
             </div>
 
-            <div style="width: 20%; display: table-cell; text-align: center;">
+            <div style="width: 15%; display: table-cell; text-align: center;">
+                <span class="fa fa-eye" id="viewCount" > {{.Views}}</span>
+            </div>
+
+            <div style="width: 15%; display: table-cell; text-align: center;">
                 {{if .IsPreviewFlow}}
                     <span class="fa-regular fa-thumbs-up" title="not_liked" id="likeCount" > {{.Likes}}</span>
                 {{else}}
@@ -79,7 +91,7 @@
                 {{end}}
             </div>
             
-            <div style="width: 40%; display: table-cell; text-align: right;"> {{.Date}} </div>
+            <div style="width: 35%; display: table-cell; text-align: right;"> {{.Date}} </div>
         </div>
     </div>
     </div>

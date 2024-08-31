@@ -115,7 +115,7 @@ func ProcessUpdateBlog(w http.ResponseWriter, r *http.Request) {
 	client, ctx, cancel := mongo.Connect()
 	defer mongo.Close(client, ctx, cancel)
 
-	updateOneResult, err := mongo.UpdateBlog(client, ctx, mongo.DBName, mongo.BlogCollection, filter, post)
+	updateOneResult := mongo.UpdateBlog(client, ctx, mongo.DBName, mongo.BlogCollection, filter, post)
 
 	if err != nil {
 		w.Write([]byte("Unable to Publish blog"))
@@ -154,20 +154,16 @@ func ViewsIncrement(w http.ResponseWriter, r *http.Request) {
 	client, ctx, cancel := mongo.Connect()
 	defer mongo.Close(client, ctx, cancel)
 
-	updateOneResult, err := mongo.UpdateBlog(client, ctx, mongo.DBName, mongo.BlogCollection, filter, post)
+	var blog model.Blog
+	mongo.UpdateBlog(client, ctx, mongo.DBName, mongo.BlogCollection, filter, post).Decode(&blog)
 	if err != nil {
 		log.Println("Failed to update the likes for the blog with id : ", objectId, err)
 	}
 
-	data, err := bson.Marshal(updateOneResult)
+	//return new views count
+	_, err = fmt.Fprintf(w, strconv.Itoa(blog.Views))
 	if err != nil {
-		log.Println("Unable to marshal Blog")
-	}
-
-	var blog model.Blog
-	err = bson.Unmarshal(data, &blog)
-	if err != nil {
-		log.Println("Unable to Unmarshal Blog")
+		return
 	}
 }
 
@@ -187,10 +183,8 @@ func LikesIncrement(w http.ResponseWriter, r *http.Request) {
 	var filter interface{}
 	filter = bson.D{{"_id", objectId}}
 
-	blog := fetchById(filter)
-
 	//update the blog likes
-	newLikes := updateBlogLikes(r, blog, objectId, filter)
+	newLikes := updateBlogLikes(r, filter)
 
 	//return new likes count
 	_, err = fmt.Fprintf(w, strconv.Itoa(newLikes))
@@ -222,7 +216,7 @@ func fetchById(filter interface{}) *model.Blog {
 	return &blog
 }
 
-func updateBlogLikes(r *http.Request, blog *model.Blog, objectId primitive.ObjectID, filter interface{}) int {
+func updateBlogLikes(r *http.Request, filter interface{}) int {
 	inc, ok := r.URL.Query()["inc"]
 	if !ok {
 		log.Println("Url Param 'inc' is missing")
@@ -231,35 +225,23 @@ func updateBlogLikes(r *http.Request, blog *model.Blog, objectId primitive.Objec
 
 	doInc, _ := strconv.ParseBool(inc[0])
 
-	newLikes := 0
+	delta := 0
 
 	if doInc {
-		newLikes = blog.Likes + 1
+		delta = 1
 	} else {
-		newLikes = blog.Likes - 1
+		delta = -1
 	}
 
-	post := bson.D{{"$set", bson.M{
-		"likes": newLikes,
+	post := bson.D{{"$inc", bson.M{
+		"likes": delta,
 	}}}
 
 	client, ctx, cancel := mongo.Connect()
 	defer mongo.Close(client, ctx, cancel)
 
-	updateOneResult, err := mongo.UpdateBlog(client, ctx, mongo.DBName, mongo.BlogCollection, filter, post)
-	if err != nil {
-		log.Println("Failed to update the likes for the blog with id : ", objectId, err)
-	}
+	var blog model.Blog
+	mongo.UpdateBlog(client, ctx, mongo.DBName, mongo.BlogCollection, filter, post).Decode(&blog)
 
-	data, err := bson.Marshal(updateOneResult)
-	if err != nil {
-		log.Println("Unable to marshal Blog")
-	}
-
-	err = bson.Unmarshal(data, &blog)
-	if err != nil {
-		log.Println("Unable to Unmarshal Blog")
-	}
-
-	return newLikes
+	return blog.Likes
 }
