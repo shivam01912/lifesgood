@@ -13,7 +13,7 @@
                 xhttp.onreadystatechange = function() {
 
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
-                        document.getElementById("viewCount").innerHTML = xhttp.responseText;
+                        document.getElementById("viewCount").innerHTML = " " + xhttp.responseText;
                     }
                 };
 
@@ -32,13 +32,13 @@
                         icon.classList.remove("fa-regular");
                         icon.classList.add("fa-solid");
 
-                        document.getElementById("likeCount").innerHTML = xhttp.responseText;
+                        document.getElementById("likeCount").innerHTML = " " + xhttp.responseText;
                         document.getElementById("likeCount").title = "liked"
                     } else if (document.getElementById("likeCount").title === "liked") {
                         icon.classList.remove("fa-solid");
                         icon.classList.add("fa-regular");
 
-                        document.getElementById("likeCount").innerHTML = xhttp.responseText;
+                        document.getElementById("likeCount").innerHTML = " " + xhttp.responseText;
                         document.getElementById("likeCount").title = "not_liked"
                     }
                 }
