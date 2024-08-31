@@ -3,7 +3,6 @@ package blog
 import (
 	"html/template"
 	"io"
-	"lifesgood/app/config"
 	"lifesgood/app/util"
 	"lifesgood/db/mongo"
 	"lifesgood/model"
@@ -82,11 +81,4 @@ func ProcessPublishBlog(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-}
-
-func isPreviewFlow(flow config.Flow) bool {
-	if flow == config.CREATE {
-		return true
-	}
-	return false
 }

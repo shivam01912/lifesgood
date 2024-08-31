@@ -4,7 +4,6 @@ import (
 	"github.com/gomarkdown/markdown"
 	"html/template"
 	"io"
-	"lifesgood/app/config"
 	"lifesgood/app/util"
 	"log"
 	"net/http"
@@ -42,7 +41,7 @@ func PreviewBlog(w http.ResponseWriter, r *http.Request) {
 		"Tags":          tags,
 		"Date":          time.Unix(time.Now().Unix(), 0).Format("2 Jan, 2006"),
 		"Likes":         0,
-		"IsPreviewFlow": isPreviewFlow(config.CREATE),
+		"IsPreviewFlow": true,
 	}
 
 	util.PopulateBasePageVars(previewVars)
