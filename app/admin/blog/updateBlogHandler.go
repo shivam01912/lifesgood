@@ -104,12 +104,12 @@ func ProcessUpdateBlog(w http.ResponseWriter, r *http.Request) {
 		tags[i] = strings.TrimSpace(t)
 	}
 
-	post := bson.D{{"$set", bson.M{
-		"title":        r.PostForm.Get("title"),
-		"brief":        r.PostForm.Get("brief"),
-		"tags":         tags,
-		"content":      fileBytes,
-		"modifieddate": time.Now().Unix(),
+	post := bson.D{{"$set", model.Blog{
+		Title:        r.PostForm.Get("title"),
+		Brief:        r.PostForm.Get("brief"),
+		Tags:         tags,
+		Content:      fileBytes,
+		ModifiedDate: time.Now().Unix(),
 	}}}
 
 	client, ctx, cancel := mongo.Connect()
