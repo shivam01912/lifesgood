@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/gomarkdown/markdown v0.0.0-20240730141124-034f12af3bf6
+	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	go.mongodb.org/mongo-driver v1.16.1
 	golang.org/x/crypto v0.26.0
