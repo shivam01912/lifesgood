@@ -38,6 +38,9 @@ func main() {
 	router.HandleFunc("/blog/likes", requestHandler.LikesIncrement)
 	router.HandleFunc("/blog/views", requestHandler.ViewsIncrement)
 
+	//image handler
+	router.HandleFunc("/blog/image", requestHandler.ReadFile)
+
 	//create blog handlers
 	router.HandleFunc("/admin/addblog", adminBlogHandler.AddBlogHandler)
 	router.HandleFunc("/admin/blog/preview", adminBlogHandler.PreviewBlog)
