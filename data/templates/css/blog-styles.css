@@ -11,6 +11,16 @@ img {display: block; width: 80%; margin-left: auto; margin-right: auto;}
     font-family: charter, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
+.footer-container    {
+    width: 90vmin;
+    margin:0 auto;
+    padding-bottom: 5.0vh;
+    text-align: justify;
+    font-size: 2.0vmin;
+    letter-spacing: -0.003em;
+    font-family: charter, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
 .blog-footer {
     margin-top: 2vmin;
     width: 100%; 
@@ -21,6 +31,11 @@ img {display: block; width: 80%; margin-left: auto; margin-right: auto;}
 /* Responsive */
 @media screen and (max-width: 800px) {
     .container {
-        font-size: 2.5vmax;
+        font-size: 1.5vmax;
+        width: 90vmin;
+    }
+    .footer-container {
+        font-size: 1.0vmax;
+        width: 90vmin;
     }
 }
