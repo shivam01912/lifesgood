@@ -56,7 +56,7 @@ func ReadFile(w http.ResponseWriter, r *http.Request) {
 
 	bucket := cli.Bucket(config.BUCKET_NAME)
 
-	filePath := "/blog-images/" + strings.Join(fileName, "") + ".jpg"
+	filePath := "blog-images/" + strings.Join(fileName, "")
 	reader, err := bucket.Object(filePath).NewReader(ctx)
 	if err != nil {
 		log.Println("readFile: unable to open file from bucket %q, file %q: %v", config.BUCKET_NAME, filePath, err)
