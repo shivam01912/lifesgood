@@ -56,16 +56,16 @@ func ReadFile(w http.ResponseWriter, r *http.Request) {
 
 	bucket := cli.Bucket(config.BUCKET_NAME)
 
-	filePath := "/blog-images/" + strings.Join(fileName, "")
+	filePath := "/blog-images/" + strings.Join(fileName, "") + ".jpg"
 	reader, err := bucket.Object(filePath).NewReader(ctx)
 	if err != nil {
-		log.Println("readFile: unable to open file from bucket %q, file %q: %v", config.BUCKET_NAME, fileName, err)
+		log.Println("readFile: unable to open file from bucket %q, file %q: %v", config.BUCKET_NAME, filePath, err)
 		return
 	}
 	defer reader.Close()
 	slurp, err := ioutil.ReadAll(reader)
 	if err != nil {
-		log.Println("readFile: unable to read data from bucket %q, file %q: %v", config.BUCKET_NAME, fileName, err)
+		log.Println("readFile: unable to read data from bucket %q, file %q: %v", config.BUCKET_NAME, filePath, err)
 		return
 	}
 
