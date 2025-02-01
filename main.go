@@ -1,7 +1,6 @@
 package main
 
 import (
-	"cmp"
 	"context"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -96,7 +95,8 @@ func main() {
 	router.HandleFunc("POST /add/", server.AddDocumentsHandler)
 	router.HandleFunc("POST /query/", server.QueryHandler)
 
-	port := cmp.Or(os.Getenv("SERVERPORT"), "8080")
+	//port := cmp.Or(os.Getenv("SERVERPORT"), "8080")
+	port := "8080"
 	address := "localhost:" + port
 	log.Println("listening on", address)
 	//log.Fatal(http.ListenAndServe(address, router))
