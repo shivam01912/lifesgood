@@ -92,8 +92,8 @@ func main() {
 	}
 
 	//mux := http.NewServeMux()
-	router.HandleFunc("POST /add/", server.AddDocumentsHandler)
-	router.HandleFunc("POST /query/", server.QueryHandler)
+	router.HandleFunc("/add", server.AddDocumentsHandler)
+	router.HandleFunc("/query", server.QueryHandler)
 
 	//port := cmp.Or(os.Getenv("SERVERPORT"), "8080")
 	port := ":8080"
