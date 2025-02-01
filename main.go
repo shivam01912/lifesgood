@@ -1,8 +1,13 @@
 package main
 
 import (
+	"cmp"
+	"context"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/tmc/langchaingo/embeddings"
+	"github.com/tmc/langchaingo/llms/googleai"
+	"github.com/tmc/langchaingo/vectorstores/weaviate"
 	"lifesgood/app/admin"
 	adminBlogHandler "lifesgood/app/admin/blog"
 	"lifesgood/app/requestHandler"
@@ -10,6 +15,8 @@ import (
 	"net/http"
 	"os"
 )
+
+const embeddingModelName = "text-embedding-004"
 
 func main() {
 	if os.Getenv("ENV") != "prod" {
@@ -56,7 +63,45 @@ func main() {
 	//delete blog handlers
 	router.HandleFunc("/blog/delete", adminBlogHandler.DeleteBlogHandler)
 
-	err := http.ListenAndServe(":8080", router)
+	//LLM test application
+	ctx := context.Background()
+	//apiKey := os.Getenv("GEMINI_API_KEY")
+	geminiClient, err := googleai.New(ctx,
+		googleai.WithAPIKey(os.Getenv("Gemini_Key")),
+		googleai.WithDefaultEmbeddingModel(embeddingModelName))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	emb, err := embeddings.NewEmbedder(geminiClient)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	wvStore, err := weaviate.New(
+		weaviate.WithEmbedder(emb),
+		weaviate.WithScheme("https"),
+		weaviate.WithAPIKey(os.Getenv("Weaviate_Key")),
+		weaviate.WithHost("bn3muyvktqh10vd3vg6xa.c0.asia-southeast1.gcp.weaviate.cloud"),
+		weaviate.WithIndexName("Document"),
+	)
+
+	server := &admin.RagServer{
+		Ctx:          ctx,
+		WvStore:      wvStore,
+		GeminiClient: geminiClient,
+	}
+
+	//mux := http.NewServeMux()
+	router.HandleFunc("POST /add/", server.AddDocumentsHandler)
+	router.HandleFunc("POST /query/", server.QueryHandler)
+
+	port := cmp.Or(os.Getenv("SERVERPORT"), "8080")
+	address := "localhost:" + port
+	log.Println("listening on", address)
+	//log.Fatal(http.ListenAndServe(address, router))
+
+	err = http.ListenAndServe(address, router)
 	if err != nil {
 		log.Println("Unknown error : ", err)
 		return
