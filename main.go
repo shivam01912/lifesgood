@@ -96,12 +96,12 @@ func main() {
 	router.HandleFunc("POST /query/", server.QueryHandler)
 
 	//port := cmp.Or(os.Getenv("SERVERPORT"), "8080")
-	port := "8080"
-	address := "localhost:" + port
-	log.Println("listening on", address)
+	port := ":8080"
+	//address := "localhost" + port
+	//log.Println("listening on", address)
 	//log.Fatal(http.ListenAndServe(address, router))
 
-	err = http.ListenAndServe(address, router)
+	err = http.ListenAndServe(port, router)
 	if err != nil {
 		log.Println("Unknown error : ", err)
 		return
