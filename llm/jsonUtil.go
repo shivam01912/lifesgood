@@ -1,4 +1,4 @@
-package admin
+package llm
 
 import (
 	"encoding/json"

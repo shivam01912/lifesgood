@@ -4,12 +4,11 @@ import (
 	"context"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"github.com/tmc/langchaingo/embeddings"
 	"github.com/tmc/langchaingo/llms/googleai"
-	"github.com/tmc/langchaingo/vectorstores/weaviate"
 	"lifesgood/app/admin"
 	adminBlogHandler "lifesgood/app/admin/blog"
 	"lifesgood/app/requestHandler"
+	"lifesgood/llm"
 	"log"
 	"net/http"
 	"os"
@@ -64,46 +63,49 @@ func main() {
 
 	//LLM test application
 	ctx := context.Background()
-	//apiKey := os.Getenv("GEMINI_API_KEY")
+	////apiKey := os.Getenv("GEMINI_API_KEY")
 	geminiClient, err := googleai.New(ctx,
 		googleai.WithAPIKey(os.Getenv("Gemini_Key")),
 		googleai.WithDefaultEmbeddingModel(embeddingModelName))
 	if err != nil {
 		log.Fatal(err)
 	}
+	//
+	//emb, err := embeddings.NewEmbedder(geminiClient)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//wvStore, err := weaviate.New(
+	//	weaviate.WithEmbedder(emb),
+	//	weaviate.WithScheme("https"),
+	//	weaviate.WithAPIKey(os.Getenv("Weaviate_Key")),
+	//	weaviate.WithHost("bn3muyvktqh10vd3vg6xa.c0.asia-southeast1.gcp.weaviate.cloud"),
+	//	weaviate.WithIndexName("Document"),
+	//)
 
-	emb, err := embeddings.NewEmbedder(geminiClient)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	wvStore, err := weaviate.New(
-		weaviate.WithEmbedder(emb),
-		weaviate.WithScheme("https"),
-		weaviate.WithAPIKey(os.Getenv("Weaviate_Key")),
-		weaviate.WithHost("bn3muyvktqh10vd3vg6xa.c0.asia-southeast1.gcp.weaviate.cloud"),
-		weaviate.WithIndexName("Document"),
-	)
-
-	server := &admin.RagServer{
-		Ctx:          ctx,
-		WvStore:      wvStore,
+	server := &llm.RagServer{
+		Ctx: ctx,
+		//WvStore:      nil,
 		GeminiClient: geminiClient,
 	}
 
 	//mux := http.NewServeMux()
-	router.HandleFunc("/add", server.AddDocumentsHandler)
-	router.HandleFunc("/query", server.QueryHandler)
+	//router.HandleFunc("/add", server.AddDocumentsHandler)
+	//router.HandleFunc("/query", server.QueryHandler)
+	router.HandleFunc("/review", server.ReviewHandler)
 
 	//port := cmp.Or(os.Getenv("SERVERPORT"), "8080")
-	port := ":8080"
+	port := ":8092"
 	//address := "localhost" + port
 	//log.Println("listening on", address)
 	//log.Fatal(http.ListenAndServe(address, router))
 
+	log.Println("Starting Server.")
 	err = http.ListenAndServe(port, router)
 	if err != nil {
 		log.Println("Unknown error : ", err)
 		return
 	}
+	log.Println("Started Server.")
 }
