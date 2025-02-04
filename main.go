@@ -96,7 +96,7 @@ func main() {
 	router.HandleFunc("/review", server.ReviewHandler)
 
 	//port := cmp.Or(os.Getenv("SERVERPORT"), "8080")
-	port := ":8092"
+	port := ":8080"
 	//address := "localhost" + port
 	//log.Println("listening on", address)
 	//log.Fatal(http.ListenAndServe(address, router))
