@@ -8,14 +8,13 @@ import (
 	"strings"
 )
 
+// TODO: remove this method once teh testing needs form a file are taken care of
 func fetchReviewString() string {
 	file, err := os.Open("./data/sample_reviews.txt")
 	if err != nil {
 		log.Println("Error reading file contents=", err)
 		return ""
 	}
-
-	var reviewString strings.Builder
 
 	var reviews []string
 	scanner := bufio.NewScanner(file)
@@ -27,12 +26,15 @@ func fetchReviewString() string {
 		log.Fatal(err)
 	}
 
-	contructBulletPoints(reviews, &reviewString)
-	return reviewString.String()
+	return constructBulletPoints(reviews)
 }
 
-func contructBulletPoints(reviews []string, reviewString *strings.Builder) {
+func constructBulletPoints(reviews []string) string {
+	var reviewString strings.Builder
+
 	for i, review := range reviews {
 		reviewString.WriteString(strconv.Itoa(i+1) + ". " + review + "\n")
 	}
+
+	return reviewString.String()
 }

@@ -17,69 +17,70 @@ type RagServer struct {
 	GeminiClient *googleai.GoogleAI
 }
 
-//func (rs *RagServer) AddDocumentsHandler(w http.ResponseWriter, req *http.Request) {
-//	// Parse HTTP request from JSON.
-//	type document struct {
-//		Text string
-//	}
-//	type addRequest struct {
-//		Documents []document
-//	}
-//	ar := &addRequest{}
-//
-//	err := readRequestJSON(req, ar)
-//	if err != nil {
-//		http.Error(w, err.Error(), http.StatusBadRequest)
-//		return
-//	}
-//
-//	// Store documents and their embeddings in weaviate
-//	var wvDocs []schema.Document
-//	for _, doc := range ar.Documents {
-//		wvDocs = append(wvDocs, schema.Document{PageContent: doc.Text})
-//	}
-//	_, err = rs.WvStore.AddDocuments(rs.Ctx, wvDocs)
-//	if err != nil {
-//		http.Error(w, err.Error(), http.StatusInternalServerError)
-//		return
-//	}
-//}
-//
-//func (rs *RagServer) QueryHandler(w http.ResponseWriter, req *http.Request) {
-//	// Parse HTTP request from JSON.
-//	type queryRequest struct {
-//		Content string
-//	}
-//	qr := &queryRequest{}
-//	err := readRequestJSON(req, qr)
-//	if err != nil {
-//		http.Error(w, err.Error(), http.StatusBadRequest)
-//		return
-//	}
-//
-//	// Find the most similar documents.
-//	docs, err := rs.WvStore.SimilaritySearch(rs.Ctx, qr.Content, 3)
-//	if err != nil {
-//		http.Error(w, fmt.Errorf("similarity search: %w", err).Error(), http.StatusInternalServerError)
-//		return
-//	}
-//	var docsContents []string
-//	for _, doc := range docs {
-//		docsContents = append(docsContents, doc.PageContent)
-//	}
-//
-//	// Create a RAG query for the LLM with the most relevant documents as
-//	// context.
-//	ragQuery := fmt.Sprintf(ragTemplateStr, qr.Content, strings.Join(docsContents, "\n"))
-//	respText, err := llms.GenerateFromSinglePrompt(rs.Ctx, rs.GeminiClient, ragQuery, llms.WithModel(generativeModelName))
-//	if err != nil {
-//		log.Printf("calling generative model: %v", err.Error())
-//		http.Error(w, "generative model error", http.StatusInternalServerError)
-//		return
-//	}
-//
-//	renderJSON(w, respText)
-//}
+/*
+func (rs *RagServer) AddDocumentsHandler(w http.ResponseWriter, req *http.Request) {
+	// Parse HTTP request from JSON.
+	type document struct {
+		Text string
+	}
+	type addRequest struct {
+		Documents []document
+	}
+	ar := &addRequest{}
+
+	err := readRequestJSON(req, ar)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Store documents and their embeddings in weaviate
+	var wvDocs []schema.Document
+	for _, doc := range ar.Documents {
+		wvDocs = append(wvDocs, schema.Document{PageContent: doc.Text})
+	}
+	_, err = rs.WvStore.AddDocuments(rs.Ctx, wvDocs)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (rs *RagServer) QueryHandler(w http.ResponseWriter, req *http.Request) {
+	// Parse HTTP request from JSON.
+	type queryRequest struct {
+		Content string
+	}
+	qr := &queryRequest{}
+	err := readRequestJSON(req, qr)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Find the most similar documents.
+	docs, err := rs.WvStore.SimilaritySearch(rs.Ctx, qr.Content, 3)
+	if err != nil {
+		http.Error(w, fmt.Errorf("similarity search: %w", err).Error(), http.StatusInternalServerError)
+		return
+	}
+	var docsContents []string
+	for _, doc := range docs {
+		docsContents = append(docsContents, doc.PageContent)
+	}
+
+	// Create a RAG query for the LLM with the most relevant documents as
+	// context.
+	ragQuery := fmt.Sprintf(ragTemplateStr, qr.Content, strings.Join(docsContents, "\n"))
+	respText, err := llms.GenerateFromSinglePrompt(rs.Ctx, rs.GeminiClient, ragQuery, llms.WithModel(generativeModelName))
+	if err != nil {
+		log.Printf("calling generative model: %v", err.Error())
+		http.Error(w, "generative model error", http.StatusInternalServerError)
+		return
+	}
+
+	renderJSON(w, respText)
+}
 
 const ragTemplateStr = `
 I will ask you a question and will provide some additional context information.
@@ -101,11 +102,13 @@ Question:
 Context:
 %s
 `
+*/
 
 func (rs *RagServer) ReviewHandler(w http.ResponseWriter, req *http.Request) {
 	// Parse HTTP request from JSON.
 	type queryRequest struct {
-		Content string
+		Storefront string
+		Content    []string
 	}
 	qr := &queryRequest{}
 	err := readRequestJSON(req, qr)
@@ -116,11 +119,11 @@ func (rs *RagServer) ReviewHandler(w http.ResponseWriter, req *http.Request) {
 
 	// Create a RAG query for the LLM with the most relevant documents as
 	// context.
-	ragQuery := fmt.Sprintf(reviewTemplateStr, "Brik Oven Pizza Indiranagar", fetchReviewString())
+	ragQuery := fmt.Sprintf(reviewTemplateStr, qr.Storefront, constructBulletPoints(qr.Content))
 	fmt.Println(ragQuery)
 	respText, err := llms.GenerateFromSinglePrompt(rs.Ctx, rs.GeminiClient, ragQuery, llms.WithModel(generativeModelName))
 	if err != nil {
-		log.Printf("calling generative model: %v", err.Error())
+		log.Printf("error calling generative model: %v", err.Error())
 		http.Error(w, "generative model error", http.StatusInternalServerError)
 		return
 	}
