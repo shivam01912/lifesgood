@@ -3,8 +3,10 @@ package llm
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"mime"
 	"net/http"
+	"strconv"
 )
 
 // readRequestJSON expects req to have a JSON content type with a body that
@@ -33,5 +35,13 @@ func renderJSON(w http.ResponseWriter, v any) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
+	respTest, err := strconv.Unquote(string(js))
+	if err != nil {
+		log.Printf("Error un-escaping the LLM response error=%s reponseText=%s\n", err.Error(), string(js))
+	}
+
+	_, err = w.Write([]byte(respTest))
+	if err != nil {
+		return
+	}
 }

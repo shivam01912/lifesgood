@@ -7,7 +7,6 @@ import (
 	"github.com/tmc/langchaingo/llms/googleai"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 const generativeModelName = "gemini-1.5-flash"
@@ -129,11 +128,7 @@ func (rs *RagServer) ReviewHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	respTest, err := strconv.Unquote(llmResponse)
-	if err != nil {
-		log.Println("Error un-escaping the LLM response=", err.Error())
-	}
-	renderJSON(w, respTest)
+	renderJSON(w, llmResponse)
 }
 
 const reviewTemplateStr = `
