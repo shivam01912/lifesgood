@@ -7,6 +7,7 @@ import (
 	"github.com/tmc/langchaingo/llms/googleai"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 const generativeModelName = "gemini-1.5-flash"
@@ -121,14 +122,18 @@ func (rs *RagServer) ReviewHandler(w http.ResponseWriter, req *http.Request) {
 	// context.
 	ragQuery := fmt.Sprintf(reviewTemplateStr, qr.Storefront, constructBulletPoints(qr.Content))
 	fmt.Println(ragQuery)
-	respText, err := llms.GenerateFromSinglePrompt(rs.Ctx, rs.GeminiClient, ragQuery, llms.WithModel(generativeModelName))
+	llmResponse, err := llms.GenerateFromSinglePrompt(rs.Ctx, rs.GeminiClient, ragQuery, llms.WithModel(generativeModelName))
 	if err != nil {
 		log.Printf("error calling generative model: %v", err.Error())
 		http.Error(w, "generative model error", http.StatusInternalServerError)
 		return
 	}
 
-	renderJSON(w, respText)
+	respTest, err := strconv.Unquote(llmResponse)
+	if err != nil {
+		log.Println("Error un-escaping the LLM response=", err.Error())
+	}
+	renderJSON(w, respTest)
 }
 
 const reviewTemplateStr = `
