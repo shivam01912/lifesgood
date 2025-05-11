@@ -3,13 +3,14 @@ package llm
 import (
 	"context"
 	"fmt"
-	"github.com/tmc/langchaingo/llms"
-	"github.com/tmc/langchaingo/llms/googleai"
 	"log"
 	"net/http"
+
+	"github.com/tmc/langchaingo/llms"
+	"github.com/tmc/langchaingo/llms/googleai"
 )
 
-const generativeModelName = "gemini-1.5-flash"
+const generativeModelName = "gemini-2.0-flash"
 
 type RagServer struct {
 	Ctx context.Context
