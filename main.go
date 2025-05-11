@@ -2,9 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
-	"github.com/tmc/langchaingo/llms/googleai"
 	"lifesgood/app/admin"
 	adminBlogHandler "lifesgood/app/admin/blog"
 	"lifesgood/app/requestHandler"
@@ -12,6 +9,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
+	"github.com/tmc/langchaingo/llms/googleai"
 )
 
 const embeddingModelName = "text-embedding-004"
